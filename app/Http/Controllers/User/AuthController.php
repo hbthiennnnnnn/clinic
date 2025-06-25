@@ -135,21 +135,25 @@ class AuthController extends Controller
 
     public function delete_account()
     {
-        $user = auth()->user();
+        $user = \App\Models\User::find(auth()->id());
 
         if ($user) {
-            // Xoá các bản ghi liên quan trước
+            // Xóa thủ công nếu cần
             \App\Models\Faq::where('user_id', $user->id)->delete();
 
-            $user->forceDelete(); // Hoặc forceDelete nếu cần
-
+            // Logout trước khi xoá
             auth()->logout();
+
+            // Xóa tài khoản thật sự
+            $user->delete(); // dùng forceDelete nếu có SoftDeletes
+
             Session::flush();
-            Session::flash('success', 'Xóa tài khoản thành công');
+            Session::flash('success', 'Tài khoản đã được xóa');
         }
 
         return redirect()->route('home');
     }
+
 
 
 
