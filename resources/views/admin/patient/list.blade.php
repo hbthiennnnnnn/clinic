@@ -76,9 +76,9 @@
                                     <th scope="col">Tên</th>
                                     <th scope="col">Giới tính</th>
                                     <th scope="col">SĐT</th>
-                                    @can(['chinh-sua-benh-nhan'])
+                              
                                         <th scope="col">Xử lý</th>
-                                    @endcan
+                         
                                 </tr>
                             </thead>
                             <tbody>
