@@ -24,7 +24,7 @@
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-light fixed-top shadow-lg">
         <div class="container">
-            <a class="navbar-brand mx-auto d-lg-none" href="http://127.0.0.1:8000/">
+            <a class="navbar-brand mx-auto d-lg-none" href="http://healingcare.healingdc.id.vn/">
                 Healing Care
                 <strong class="d-block">Health Specialist</strong>
             </a>
@@ -34,14 +34,14 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">Giới thiệu</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#timeline">Quy trình</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('user.service-price')}}">Dịch vụ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{route('home')}}#timeline">Quy trình</a></li>
                     <a class="navbar-brand d-none d-lg-block" href="/">
                         Healing Care
                         <strong class="d-block">Health Specialist</strong>
                     </a>
-                    <li class="nav-item"><a class="nav-link" href="#reviews">Tin tức</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#booking">Đặt lịch</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#reviews">Tin tức</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('home')}}#booking">Đặt lịch</a></li>
                     <li class="nav-item">
                         @if (Auth::check())
                             <a class="nav-link" href="{{ route('user.overview') }}">
