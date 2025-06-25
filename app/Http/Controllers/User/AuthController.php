@@ -135,9 +135,15 @@ class AuthController extends Controller
 
     public function delete_account()
     {
-        auth()->delete();
+        $user = auth()->user(); // Lấy user đang đăng nhập
+
+    if ($user) {
+        $user->delete(); // Xoá user khỏi database
+        auth()->logout(); // Đăng xuất khỏi hệ thống
         Session::flash('success', 'Xóa tài khoản thành công');
-        return redirect()->route('home');
+    }
+
+    return redirect()->route('home');
     }
 
     public function overview()
