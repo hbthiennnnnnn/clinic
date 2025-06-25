@@ -89,10 +89,18 @@
             <div class="row">
                 <div class="col-lg-5 me-auto col-12">
                     <h5 class="mb-lg-4 mb-3">Giờ hoạt động</h5>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex">Chủ nhật: Nghỉ</li>
-                        <li class="list-group-item d-flex">Thứ 2 – Thứ 6: <span>7:00 - 17:00</span></li>
-                        <li class="list-group-item d-flex">Thứ 7: <span>9:00 - 12:00</span></li>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex">
+                            Thứ 7 - Chủ nhật:
+                            <span>Nghỉ</span>
+                        </li>
+
+                        <li class="list-group-item d-flex">
+                            Thứ 2 – Thứ 6:
+                            <span>7:00 - 17:00</span>
+                        </li>
+
+                      
                     </ul>
                 </div>
 
