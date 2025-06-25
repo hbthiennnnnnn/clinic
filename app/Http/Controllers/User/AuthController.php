@@ -135,16 +135,24 @@ class AuthController extends Controller
 
     public function delete_account()
     {
-        $user = auth()->user(); // Lấy user đang đăng nhập
+        $user = auth()->user();
 
-    if ($user) {
-        $user->delete(); // Xoá user khỏi database
-        auth()->logout(); // Đăng xuất khỏi hệ thống
-        Session::flash('success', 'Xóa tài khoản thành công');
+        if ($user) {
+            $user->delete();          // Xoá user khỏi database
+            auth()->logout();         // Đăng xuất khỏi hệ thống
+
+            // Huỷ toàn bộ session
+            Session::flush();
+
+            // (Tuỳ chọn) regenerate session ID để tránh session cũ
+            Session::regenerate();
+
+            Session::flash('success', 'Xóa tài khoản thành công');
+        }
+
+        return redirect()->route('home');
     }
 
-    return redirect()->route('home');
-    }
 
     public function overview()
     {
@@ -342,7 +350,7 @@ class AuthController extends Controller
     public function medical_history_detail($id)
     {
         $auth = auth()->user();
-        
+
         $medical_certificate = MedicalCertificate::with('prescription') // thêm eager load
             ->where('id', $id)
             ->whereHas('patient', function ($query) use ($auth) {
