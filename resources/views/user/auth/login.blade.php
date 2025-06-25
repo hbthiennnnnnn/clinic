@@ -51,7 +51,7 @@
                 <a href="{{ route('user.google-login') }}"
                     class="btn w-100 btn-outline-primary d-flex align-items-center justify-content-center"
                     style="border-radius: 8px; font-weight: 500; transition: 0.3s ease;">
-                    <i class="icofont-google-plus me-2"></i> Google
+                    Google
                 </a>
 
                 <p class="text-center mt-4 mb-0">Bạn chưa có tài khoản?
