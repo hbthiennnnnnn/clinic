@@ -138,20 +138,19 @@ class AuthController extends Controller
         $user = auth()->user();
 
         if ($user) {
-            $user->delete();          // Xoá user khỏi database
-            auth()->logout();         // Đăng xuất khỏi hệ thống
+            // Xoá các bản ghi liên quan trước
+            \App\Models\Faq::where('user_id', $user->id)->delete();
 
-            // Huỷ toàn bộ session
+            $user->forceDelete(); // Hoặc forceDelete nếu cần
+
+            auth()->logout();
             Session::flush();
-
-            // (Tuỳ chọn) regenerate session ID để tránh session cũ
-            Session::regenerate();
-
             Session::flash('success', 'Xóa tài khoản thành công');
         }
 
         return redirect()->route('home');
     }
+
 
 
     public function overview()
