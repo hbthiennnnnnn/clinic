@@ -23,16 +23,15 @@
                                 <form method="POST" action="{{ route('admin.handle_recovery') }}">
                                     @csrf
                                     <div class="mb-3">
-                                        <label class="form-label" for="email">Email <span
-                                                class="text-danger">*</span></label>
+                                        <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email"
-                                            class="form-control  @error('email') is-invalid @enderror" id="email"
-                                            {{ $email ? 'disabled' : null }} value="{{ $email ?? old('email') }}"
-                                            placeholder="Enter email" />
+                                            class="form-control @error('email') is-invalid @enderror" id="email"
+                                            value="{{ old('email') }}" placeholder="Nhập email" />
                                         @error('email')
                                         <div class="message-error">{{ $message }}</div>
                                         @enderror
                                     </div>
+
                                     <div class="mb-3">
                                         <label for="code" class="form-label">Code <span
                                                 class="text-danger">*</span></label>
