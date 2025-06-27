@@ -389,6 +389,31 @@
 
                                     <div class="col-lg-6 col-12">
                                         <input type="text" id="appointment_date" name="appointment_date" class="form-control" placeholder="Ngày khám" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" name="dob">
+                                        <script>
+                                            document.addEventListener("DOMContentLoaded", function() {
+                                                const dateInput = document.getElementById("appointment_date");
+
+                                                dateInput.addEventListener("change", function() {
+                                                    const selectedDate = new Date(this.value);
+                                                    const today = new Date();
+
+                                                    // Format lại ngày để so sánh YYYY-MM-DD
+                                                    const formatDate = (date) => {
+                                                        const yyyy = date.getFullYear();
+                                                        const mm = String(date.getMonth() + 1).padStart(2, '0');
+                                                        const dd = String(date.getDate()).padStart(2, '0');
+                                                        return `${yyyy}-${mm}-${dd}`;
+                                                    };
+
+                                                    if (formatDate(selectedDate) === formatDate(today)) {
+                                                        // Hiển thị modal thông báo
+                                                        const modal = new bootstrap.Modal(document.getElementById('todayWarningModal'));
+                                                        modal.show();
+                                                    }
+                                                });
+                                            });
+                                        </script>
+
                                     </div>
 
                                     <div class="col-lg-6 col-12">
@@ -400,7 +425,7 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <textarea name="note" rows="4" class="form-control" placeholder="Ghi chú"></textarea>
+                                        <textarea name="note" rows="4" class="form-control" placeholder="Nhập triệu chứng bệnh"></textarea>
                                     </div>
 
                                     <div class="col-12 d-flex align-items-center gap-3 mt-4">
@@ -414,6 +439,29 @@
                                     </div>
                                 </div>
                             </form>
+                            <div class="modal fade" id="todayWarningModal" tabindex="-1" aria-labelledby="todayWarningModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content text-center p-3">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="todayWarningModalLabel">Thông báo</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>
+                                                Quý khách có nhu cầu đặt lịch khám trong ngày, vui lòng gọi hotline
+                                                <strong class="text-primary">0123-456-789</strong> để được hỗ trợ.
+                                            </p>
+                                            <p class="mt-2">
+                                                Đặt hẹn trực tuyến được đề nghị cho các trường hợp không khẩn cấp, không cấp cứu và khách hàng cần đặt hẹn tối thiểu 01 ngày trước ngày khám. Mong quý khách thông cảm. Trân trọng
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Đồng ý</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
