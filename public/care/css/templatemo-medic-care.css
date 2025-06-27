@@ -753,6 +753,7 @@ strong {
   display: inline-block;
   vertical-align: top;
   transition: all 0.3s;
+  font-weight: var(--font-weight-light);
 }
 
 .social-icon:hover li:not(:hover) {
@@ -760,7 +761,6 @@ strong {
 }
 
 .social-icon-link {
-  font-size: var(--p-font-size);
   display: inline-block;
   vertical-align: top;
   margin-top: 4px;

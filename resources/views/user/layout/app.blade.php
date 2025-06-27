@@ -109,7 +109,7 @@
 
 
     {{-- Footer giữ nguyên --}}
-    <footer class="site-footer section-padding" id="contact">
+   <footer class="site-footer section-padding" id="contact">
         <div class="container">
             <div class="row">
 
@@ -118,7 +118,8 @@
 
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex">
-                            Chủ nhật: Nghỉ
+                            Thứ 7 - Chủ nhật:
+                            <span>Nghỉ</span>
                         </li>
 
                         <li class="list-group-item d-flex">
@@ -126,34 +127,57 @@
                             <span>7:00 - 17:00</span>
                         </li>
 
-                        <li class="list-group-item d-flex">
-                            Thứ 7:
-                            <span>9:00 - 12:00</span>
-                        </li>
+
                     </ul>
                 </div>
 
                 <div class="col-lg-2 col-md-6 col-12 my-4 my-lg-0">
-                    <h5 class="mb-lg-4 mb-3">Healing Care</h5>
+                    <h5 class="mb-lg-4 mb-3">Chính sách</h5>
+                    
+                    <div class="mt-3">
+                        <a href="http://online.gov.vn/" target="_blank" rel="noopener noreferrer">
+                            <img src="https://umcclinic.com.vn/Data/Sites/1/media/img/verify.png"
+                                alt="Bộ Công Thương"
+                                width="100%"
+                                style="display: block; margin-bottom: 6px;">
+                        </a>
+                        <small style="font-size: 12px; color: #666; font-style: italic;">
+                            Đây là sản phẩm demo. Nếu triển khai chính thức, cần đăng ký với Bộ Công Thương.
+                        </small>
+                    </div>
 
-                    <p><a href="mailto:hello@company.co">healingcare.vn@gmail.com</a>
-                    <p>
 
-                    <p>184 Đ.Lê Đại Hành, Phường 15, Quận 11, Hồ Chí Minh</p>
                 </div>
 
                 <div class="col-lg-3 col-md-6 col-12 ms-auto">
-                    <h5 class="mb-lg-4 mb-3">Kết nối với chúng tôi </h5>
+                    <h5 class="mb-lg-4 mb-3">Liên Kết </h5>
 
                     <ul class="social-icon">
-                        <li><a href="#" class="social-icon-link bi-facebook"></a></li>
-
-                        <li><a href="#" class="social-icon-link bi-twitter"></a></li>
-
-                        <li><a href="#" class="social-icon-link bi-instagram"></a></li>
-
-                        <li><a href="#" class="social-icon-link bi-youtube"></a></li>
+                        <li style="margin-bottom: 12px; font-size: 18px;">
+                            <img src="https://umcclinic.com.vn/Data/Sites/1/skins/default/img/logo-3.png" alt="icon" width="16" height="16" style="vertical-align: middle; margin-right: 8px;">
+                            <a href="http://www.medinet.hochiminhcity.gov.vn/Default.aspx">
+                                Cổng điện tử Sở Y tế TP. HCM
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 12px; font-size: 18px;">
+                            <img src="https://umcclinic.com.vn/Data/Sites/1/skins/default/img/logo-3.png" alt="icon" width="16" height="16" style="vertical-align: middle; margin-right: 8px;">
+                            <a href="http://www.medinet.hochiminhcity.gov.vn/thong-bao-tb1013.aspx/Default.aspx">
+                                Thông báo Sở Y tế TP. HCM
+                            </a>
+                        </li>
                     </ul>
+
+
+                    <div class="mt-3">
+                        <iframe
+                            src="https://www.google.com/maps?q=184+Lê+Đại+Hành,+Phường+15,+Quận+11,+TP.HCM&output=embed"
+                            style="width: 100%; height: 200px; border: 0; border-radius: 8px;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
                 </div>
 
 
