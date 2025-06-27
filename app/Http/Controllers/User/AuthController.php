@@ -154,9 +154,6 @@ class AuthController extends Controller
         return redirect()->route('home');
     }
 
-
-
-
     public function overview()
     {
         $title = 'Thông tin tài khoản';
@@ -253,12 +250,15 @@ class AuthController extends Controller
             'token' => $token,
             'token_duration' => $expiration,
         ]);
+
+        // Lưu email vào session
+        session(['email' => $request->email]);
+
         ForgotPasswordJob::dispatch($request->email, $token)->delay(now()->addSecond(5));
         Session::flash('success', 'Mã xác nhận đã được gửi đến bạn. Vui lòng kiểm tra email');
-        return redirect()->route('user.recovery')->with([
-            'email' => $request->email
-        ]);
+        return redirect()->route('user.recovery');
     }
+
 
     public function page_recovery_password()
     {
@@ -271,22 +271,27 @@ class AuthController extends Controller
     {
         $email = $request->email;
         $password = $request->password;
+        $token = $request->token;
+        session()->put('email', $email);
         $user = User::where('email', $email)->first();
-        if ($user->token === $request->code) {
+        if ($user->token == $token) {
             if (Carbon::now()->greaterThan($user->token_duration)) {
                 Session::flash('error', 'Mã xác nhận đã hết hạn, vui lòng yêu cầu mã xác nhận mới');
                 return redirect()->back();
             }
+
             $user->update([
                 'password' => Hash::make($password),
                 'token' => null,
                 'token_duration' => null
             ]);
+
             if (auth()->attempt(['email' => $email, 'password' => $password])) {
                 Session::flash('success', 'Đổi mật khẩu thành công');
                 return redirect()->route('home');
             }
         }
+
         Session::flash('error', 'Token không hợp lệ!');
         return redirect()->back();
     }

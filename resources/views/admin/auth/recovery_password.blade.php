@@ -6,7 +6,6 @@
 </head>
 
 <body>
-    <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed">
         <div
@@ -25,8 +24,10 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email"
-                                            class="form-control @error('email') is-invalid @enderror" id="email"
-                                            value="{{ old('email') }}" placeholder="Nhập email" />
+                                            class="form-control @error('email') is-invalid @enderror"
+                                            id="email"
+                                            value="{{ old('email', $email ?? '') }}"
+                                            readonly />
                                         @error('email')
                                         <div class="message-error">{{ $message }}</div>
                                         @enderror

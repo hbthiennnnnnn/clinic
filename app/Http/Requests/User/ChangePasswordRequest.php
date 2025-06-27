@@ -23,7 +23,7 @@ class ChangePasswordRequest extends FormRequest
     {
         return [
             'now_pass' => 'required',
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:8|confirmed'
         ];
     }
 
@@ -33,7 +33,7 @@ class ChangePasswordRequest extends FormRequest
             'now_pass.required' => 'Vui lòng nhập mật khẩu hiện tại',
             'password.required' => 'Vui lòng nhập mật khẩu mới',
             'password.confirmed' => 'Xác nhận mật khẩu không hợp lệ',
-            'password.min' => 'Mật khẩu có tối thiểu 6 ký tự'
+            'password.min' => 'Mật khẩu có tối thiểu 8 ký tự'
         ];
     }
 }

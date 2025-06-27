@@ -23,8 +23,8 @@ class RecoverPasswordRequest extends FormRequest
     {
         return [
             'email' => 'required|exists:users,email',
-            'code' => 'required|exists:users,token_reset_password',
-            'password' => 'required|min:6|confirmed'
+            'token' => 'required|exists:users,token',
+            'password' => 'required|min:8|confirmed'
         ];
     }
 
@@ -33,10 +33,10 @@ class RecoverPasswordRequest extends FormRequest
         return [
             'email.required' => 'Email không được để trống',
             'email.exists' => 'Email không hợp lệ',
-            'code.required' => 'Mã xác nhận không được để trống',
-            'code.exists' => 'Mã xác nhận không hợp lệ',
+            'token.required' => 'Token không được để trống',
+            'token.exists' => 'Token không hợp lệ',
             'password.required' => 'Mật khẩu không được để trống',
-            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
             'password.confirmed' => 'Xác nhận mật khẩu không hợp lệ',
         ];
     }

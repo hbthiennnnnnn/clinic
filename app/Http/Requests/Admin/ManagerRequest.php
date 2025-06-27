@@ -30,7 +30,7 @@ class ManagerRequest extends FormRequest
             'clinic' => 'required|exists:clinics,id',
             'department' => 'required|exists:departments,id',
             'role' => 'required|exists:roles,name',
-            'password' => 'nullable|min:5|confirmed',
+            'password' => 'nullable|min:8|confirmed',
             'phone' => ['nullable', 'unique:admins,phone,' .  $adminId, 'regex:/^(0|\+84)(3[2-9]|5[2689]|7[0-9]|8[1-9]|9[0-9])[0-9]{7}$/'],
             'address' => 'nullable|string',
             'gender' => 'nullable|in:1,2',
