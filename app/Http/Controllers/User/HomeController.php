@@ -28,7 +28,10 @@ class HomeController extends Controller
     public function home()
     {
         $title = 'Trang chủ';
-        $departments = Department::where('status', 1)->orderByDesc('id')->get();
+        $departments = Department::where('status', 1)
+            ->whereNotIn('id', [6,7]) // loại trừ id 2 và 3
+            ->orderByDesc('id')
+            ->get();
         $doctors = Admin::role('Bác sĩ')->where('status', 1)->orderByDesc('id')->get();
         $doctors = [];
         $news = News::with('newsCategories')->where('status', 1)->orderByDesc('id')->take(9)->get();
