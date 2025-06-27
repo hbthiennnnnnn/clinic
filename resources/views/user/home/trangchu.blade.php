@@ -75,7 +75,7 @@
                         </li>
 
                         <li class="nav-item">
-                           <a class="nav-link" href="{{ route('home') }}#booking">Đặt lịch</a>
+                            <a class="nav-link" href="{{ route('home') }}#booking">Đặt lịch</a>
                         </li>
 
                         <li class="nav-item">
@@ -123,11 +123,11 @@
                         <div class="heroText d-flex flex-column justify-content-center">
 
                             <h1 class="mt-auto mb-2">
-                                Xây dựng
+                                Sống
                                 <div class="animated-info">
-                                    <span class="animated-item">sức khỏe</span>
-                                    <span class="animated-item">niềm vui</span>
-                                    <span class="animated-item">cuộc sống</span>
+                                    <span class="animated-item">khỏe</span>
+                                    <span class="animated-item">vui</span>
+                                    <span class="animated-item">đẹp</span>
                                 </div>
                             </h1>
 
@@ -392,9 +392,10 @@
                                     </div>
 
                                     <div class="col-lg-6 col-12">
-                                        <select name="start_time" class="form-control" id="slot_select">
-
-                                            
+                                        <select name="session" class="form-control" id="time_period_select" required>
+                                            <option value="">Chọn buổi khám</option>
+                                            <option value="morning">Buổi sáng</option>
+                                            <option value="afternoon">Buổi chiều</option>
                                         </select>
                                     </div>
 
@@ -441,7 +442,7 @@
                             <span>7:00 - 17:00</span>
                         </li>
 
-                      
+
                     </ul>
                 </div>
 

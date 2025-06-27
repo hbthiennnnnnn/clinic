@@ -68,28 +68,29 @@ class HomeController extends Controller
     {
         $doctor_id = $request->query('doctor_id');
         $date = $request->query('date');
+        $session = $request->query('session'); // 'morning' hoặc 'afternoon'
+
         $schedule = WorkSchedule::where('staff_id', $doctor_id)->first();
         if (!$schedule) return response()->json([]);
 
         $weekday = Carbon::parse($date)->dayOfWeek;
-        if ($weekday < 1 || $weekday > 5) return response()->json([]);
+        if ($weekday < 1 || $weekday > 5) return response()->json([]); // 1-5 là T2 -> T6
 
-        $duration = $schedule->slot_duration;
+        // Kiểm tra nếu có lịch ở buổi được chọn
+        $available = match ($session) {
+            'morning' => $schedule->morning_start && $schedule->morning_end,
+            'afternoon' => $schedule->afternoon_start && $schedule->afternoon_end,
+            default => false,
+        };
 
-        $slots = array_merge(
-            $this->generateSlots($schedule->morning_start, $schedule->morning_end, $duration),
-            $this->generateSlots($schedule->afternoon_start, $schedule->afternoon_end, $duration)
-        );
-
-        $booked = Appointment::where('doctor_id', $doctor_id)
-            ->where('appointment_date', $date)
-            ->pluck('start_time')
-            ->map(fn($t) => Carbon::parse($t)->format('H:i'))
-            ->toArray();
-
-        $available = array_filter($slots, fn($slot) => !in_array($slot['start'], $booked));
-        return response()->json(array_values($available));
+        return response()->json([
+            'available' => $available,
+            'start' => $session === 'morning' ? $schedule->morning_start : $schedule->afternoon_start,
+            'end' => $session === 'morning' ? $schedule->morning_end : $schedule->afternoon_end,
+        ]);
     }
+
+
 
     private function generateSlots($start, $end, $duration)
     {
@@ -127,10 +128,24 @@ class HomeController extends Controller
         return view('user.home.trangchu', compact('title', 'departments', 'doctors', 'selectedDoctor', 'selectedDepartmentId'));
     }
 
-
     public function book_appointment(BookAppointmentRequest $request)
     {
         try {
+            $schedule = WorkSchedule::where('staff_id', $request->doctor_id)->first();
+
+            if (!$schedule) {
+                return response()->json(['success' => false, 'message' => 'Bác sĩ không có lịch làm việc.']);
+            }
+
+            // Lấy khung giờ tương ứng theo session
+            if ($request->session === 'morning') {
+                $start_time = $schedule->morning_start;
+            } elseif ($request->session === 'afternoon') {
+                $start_time = $schedule->afternoon_start;
+            } else {
+                return response()->json(['success' => false, 'message' => 'Vui lòng chọn buổi khám.']);
+            }
+
             $data = Appointment::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -140,21 +155,54 @@ class HomeController extends Controller
                 'department_id' => $request->department_id,
                 'doctor_id' => $request->doctor_id,
                 'appointment_date' => $request->appointment_date,
-                'start_time' => $request->start_time,
+                'session' => $request->session, // NEW FIELD: buổi sáng hoặc chiều
+                'start_time' => $start_time,    // Vẫn lưu nếu muốn
                 'note' => $request->note,
                 'is_viewed' => false,
                 'status' => 0,
                 'cancel_token' => Str::uuid(),
             ]);
+
             AppointmentJob::dispatch($data->email, $data->cancel_token)->delay(now()->addSecond(10));
             $count = Appointment::where('is_viewed', false)->count();
             $doctor = Admin::find($data['doctor_id']);
             event(new AppointmentEvent($data['name'], $data['id'], $count, $doctor->name));
+
             return response()->json(['success' => true, 'message' => 'Đặt lịch khám thành công']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Có lỗi khi đặt lịch khám!']);
         }
     }
+
+
+
+    // public function book_appointment(BookAppointmentRequest $request)
+    // {
+    //     try {
+    //         $data = Appointment::create([
+    //             'name' => $request->name,
+    //             'email' => $request->email,
+    //             'phone' => $request->phone,
+    //             'dob' => $request->dob,
+    //             'gender' => $request->gender,
+    //             'department_id' => $request->department_id,
+    //             'doctor_id' => $request->doctor_id,
+    //             'appointment_date' => $request->appointment_date,
+    //             'start_time' => $request->start_time,
+    //             'note' => $request->note,
+    //             'is_viewed' => false,
+    //             'status' => 0,
+    //             'cancel_token' => Str::uuid(),
+    //         ]);
+    //         AppointmentJob::dispatch($data->email, $data->cancel_token)->delay(now()->addSecond(10));
+    //         $count = Appointment::where('is_viewed', false)->count();
+    //         $doctor = Admin::find($data['doctor_id']);
+    //         event(new AppointmentEvent($data['name'], $data['id'], $count, $doctor->name));
+    //         return response()->json(['success' => true, 'message' => 'Đặt lịch khám thành công']);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['success' => false, 'message' => 'Có lỗi khi đặt lịch khám!']);
+    //     }
+    // }
 
     public function getDoctors($department_id)
     {

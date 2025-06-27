@@ -28,8 +28,7 @@ document
                 }
             })
             .catch((error) => {
-                // console.error("Lỗi:", error);
-                // toastr.error("Có lỗi xảy ra. Vui lòng thử lại!", "Thất bại");
+                toastr.error("Có lỗi xảy ra. Vui lòng thử lại!", "Thất bại");
             });
     });
 
@@ -59,69 +58,23 @@ function clearErrors() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    const departmentSelect = document.querySelector(
-        'select[name="department_id"]'
-    );
+    const departmentSelect = document.querySelector('select[name="department_id"]');
     const doctorSelect = document.querySelector('select[name="doctor_id"]');
 
     departmentSelect.addEventListener("change", function () {
         const departmentId = this.value;
-        const slotSelect = document.getElementById("slot_select");
-        slotSelect.innerHTML = '<option value="">-- Chọn giờ khám --</option>';
         if (departmentId) {
             fetch(`/get-doctors/${departmentId}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    doctorSelect.innerHTML =
-                        '<option value="" selected>Chọn bác sĩ</option>';
+                    doctorSelect.innerHTML = '<option value="" selected>Chọn bác sĩ</option>';
                     data.forEach((doctor) => {
                         doctorSelect.innerHTML += `<option value="${doctor.id}">${doctor.name}</option>`;
                     });
                 })
-                .catch((error) =>
-                    console.error("Error fetching doctors:", error)
-                );
+                .catch((error) => console.error("Lỗi khi tải bác sĩ:", error));
         } else {
-            doctorSelect.innerHTML =
-                '<option value="" selected>Chọn bác sĩ</option>';
+            doctorSelect.innerHTML = '<option value="" selected>Chọn bác sĩ</option>';
         }
     });
 });
-
-document.getElementById("doctor_id").addEventListener("change", fetchSlots);
-document
-    .getElementById("appointment_date")
-    .addEventListener("change", fetchSlots);
-
-function fetchSlots() {
-    const doctorId = document.getElementById("doctor_id").value;
-    const date = document.getElementById("appointment_date").value;
-    const select = document.getElementById("slot_select");
-
-    if (!doctorId || !date) return;
-const url = `/appointments/available-slots?doctor_id=${doctorId}&date=${date}`;
-
-
-    fetch(url)
-        .then((res) => res.json())
-        .then((slots) => {
-            if (slots.length === 0) {
-                const opt = document.createElement("option");
-                opt.text = "Không có khung giờ trống";
-                opt.disabled = true;
-                select.appendChild(opt);
-                return;
-            }
-            const defaultOption = document.createElement("option");
-            defaultOption.text = "-- Chọn giờ khám --";
-            defaultOption.value = "";
-            select.appendChild(defaultOption);
-
-            slots.forEach((slot) => {
-                const opt = document.createElement("option");
-                opt.value = slot.start;
-                opt.text = `${slot.start} - ${slot.end}`;
-                select.appendChild(opt);
-            });
-        });
-}

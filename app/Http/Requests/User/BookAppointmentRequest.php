@@ -6,19 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class BookAppointmentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -30,10 +22,11 @@ class BookAppointmentRequest extends FormRequest
             'department_id' => 'required|exists:departments,id',
             'doctor_id' => 'required|exists:admins,id',
             'appointment_date' => 'required|after:today',
-            'start_time' => 'required',
-            'note' => 'required'
+            'session' => 'required|in:morning,afternoon', // NEW FIELD
+            'note' => 'required',
         ];
     }
+
     public function messages(): array
     {
         return [
@@ -51,7 +44,8 @@ class BookAppointmentRequest extends FormRequest
             'doctor_id.exists' => 'Bác sĩ không tồn tại.',
             'appointment_date.required' => 'Vui lòng chọn ngày khám.',
             'appointment_date.after' => 'Ngày khám phải từ ngày mai.',
-            'start_time.required' => 'Vui lòng chọn giờ khám.',
+            'session.required' => 'Vui lòng chọn buổi khám.',
+            'session.in' => 'Buổi khám không hợp lệ. Chỉ chấp nhận sáng hoặc chiều.',
             'note.required' => 'Vui lòng nhập ghi chú.',
         ];
     }
