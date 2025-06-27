@@ -174,36 +174,6 @@ class HomeController extends Controller
         }
     }
 
-
-
-    // public function book_appointment(BookAppointmentRequest $request)
-    // {
-    //     try {
-    //         $data = Appointment::create([
-    //             'name' => $request->name,
-    //             'email' => $request->email,
-    //             'phone' => $request->phone,
-    //             'dob' => $request->dob,
-    //             'gender' => $request->gender,
-    //             'department_id' => $request->department_id,
-    //             'doctor_id' => $request->doctor_id,
-    //             'appointment_date' => $request->appointment_date,
-    //             'start_time' => $request->start_time,
-    //             'note' => $request->note,
-    //             'is_viewed' => false,
-    //             'status' => 0,
-    //             'cancel_token' => Str::uuid(),
-    //         ]);
-    //         AppointmentJob::dispatch($data->email, $data->cancel_token)->delay(now()->addSecond(10));
-    //         $count = Appointment::where('is_viewed', false)->count();
-    //         $doctor = Admin::find($data['doctor_id']);
-    //         event(new AppointmentEvent($data['name'], $data['id'], $count, $doctor->name));
-    //         return response()->json(['success' => true, 'message' => 'Đặt lịch khám thành công']);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['success' => false, 'message' => 'Có lỗi khi đặt lịch khám!']);
-    //     }
-    // }
-
     public function getDoctors($department_id)
     {
         $doctors = Admin::role('Bác sĩ')->whereHas('clinic', function ($query) use ($department_id) {
