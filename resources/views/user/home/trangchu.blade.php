@@ -388,33 +388,46 @@
                                     </div>
 
                                     <div class="col-lg-6 col-12">
-                                        <input type="text" id="appointment_date" name="appointment_date" class="form-control" placeholder="Ngày khám" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" name="dob">
+                                        <input type="text" id="appointment_date" name="appointment_date" class="form-control" placeholder="Ngày khám"
+                                            onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}">
+
                                         <script>
-                                            document.addEventListener("DOMContentLoaded", function() {
-                                                const dateInput = document.getElementById("appointment_date");
+                                            function isToday(dateString) {
+                                                const today = new Date();
+                                                const selected = new Date(dateString);
+                                                return today.toDateString() === selected.toDateString();
+                                            }
 
-                                                dateInput.addEventListener("change", function() {
-                                                    const selectedDate = new Date(this.value);
-                                                    const today = new Date();
+                                            function isWeekend(dateString) {
+                                                const day = new Date(dateString).getDay(); // 0 = CN, 6 = T7
+                                                return day === 0 || day === 6;
+                                            }
 
-                                                    // Format lại ngày để so sánh YYYY-MM-DD
-                                                    const formatDate = (date) => {
-                                                        const yyyy = date.getFullYear();
-                                                        const mm = String(date.getMonth() + 1).padStart(2, '0');
-                                                        const dd = String(date.getDate()).padStart(2, '0');
-                                                        return `${yyyy}-${mm}-${dd}`;
-                                                    };
+                                            document.getElementById("appointment_date").addEventListener("change", function() {
+                                                const selectedDate = this.value;
+                                                if (!selectedDate) return;
 
-                                                    if (formatDate(selectedDate) === formatDate(today)) {
-                                                        // Hiển thị modal thông báo
-                                                        const modal = new bootstrap.Modal(document.getElementById('todayWarningModal'));
-                                                        modal.show();
-                                                    }
-                                                });
+                                                if (isToday(selectedDate)) {
+                                                    this.value = ''; // Clear selected date
+                                                    document.getElementById("sameDayWarning").style.display = "block";
+                                                } else if (isWeekend(selectedDate)) {
+                                                    this.value = ''; // Clear selected date
+                                                    document.getElementById("weekendWarning").style.display = "block";
+                                                }
                                             });
+
+                                            function closeSameDayWarning() {
+                                                document.getElementById("sameDayWarning").style.display = "none";
+                                            }
+
+                                            function closeWeekendWarning() {
+                                                document.getElementById("weekendWarning").style.display = "none";
+                                            }
                                         </script>
 
+
                                     </div>
+
 
                                     <div class="col-lg-6 col-12">
                                         <select name="session" class="form-control" id="time_period_select" required>
@@ -439,32 +452,38 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="modal fade" id="todayWarningModal" tabindex="-1" aria-labelledby="todayWarningModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content text-center p-3">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="todayWarningModalLabel">Thông báo</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>
-                                                Quý khách có nhu cầu đặt lịch khám trong ngày, vui lòng gọi hotline
-                                                <strong class="text-primary">0123-456-789</strong> để được hỗ trợ.
-                                            </p>
-                                            <p class="mt-2">
-                                                Đặt hẹn trực tuyến được đề nghị cho các trường hợp không khẩn cấp, không cấp cứu và khách hàng cần đặt hẹn tối thiểu 01 ngày trước ngày khám. Mong quý khách thông cảm. Trân trọng
-                                            </p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Đồng ý</button>
-                                        </div>
-                                    </div>
+                            <!-- Modal cảnh báo chọn ngày hôm nay -->
+                            <div id="sameDayWarning" class="modal" style="display: none;">
+                                <div class="modal-content">
+                                    <h4>Thông báo</h4>
+                                    <hr>
+                                    <p>
+                                        Quý khách có nhu cầu đặt lịch khám trong ngày, vui lòng gọi hotline
+                                        <strong style="color:#247cff">0123-456-789</strong> để được hỗ trợ.
+                                        <br><br>
+                                        Đặt hẹn trực tuyến được đề nghị cho các trường hợp không khẩn cấp, không cấp cứu và khách hàng cần đặt hẹn tối thiểu 01 ngày trước ngày khám. Mong quý khách thông cảm. Trân trọng
+                                    </p>
+                                    <hr>
+                                    <button onclick="closeSameDayWarning()">Đồng ý</button>
                                 </div>
                             </div>
 
+                            <div id="weekendWarning" class="modal" style="display: none;">
+                                <div class="modal-content">
+                                    <h4>Thông báo</h4>
+                                    <hr>
+                                    <p>
+                                        Phòng khám không làm việc vào thứ Bảy và Chủ nhật.
+                                    </p>
+                                    <p>
+                                        Mong quý khách thông cảm vì sự bất tiện này. Chúng tôi luôn sẵn sàng phục vụ quý khách vào các ngày trong tuần từ <strong style="color:#247cff">thứ Hai đến thứ Sáu.</strong>
+                                    </p>
+                                    <hr>
+                                    <button onclick="closeWeekendWarning()">Đồng ý</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
@@ -543,6 +562,49 @@
         toastr.error("{{ session('error') }}", "Lỗi");
         @endif
     </script>
+
+    <style>
+
+        .modal {
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h4 {
+            margin-top: 0;
+        }
+
+        .modal-content button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #000;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #f1f1f1;
+            color: #000;
+        }
+    </style>
+
 </body>
 
 </html>
