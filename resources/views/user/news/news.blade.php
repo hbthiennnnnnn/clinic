@@ -34,7 +34,7 @@
                 <div class="col-lg-6 col-md-6 mb-4">
                     <div class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden" style="min-height: 100%">
                         <div class="ratio ratio-16x9">
-                     <img src="{{ asset($new->thumbnail) }}" class="card-img-top object-fit-cover" alt="thumbnail">
+                            <img src="{{ $new->thumbnail }}" class="card-img-top object-fit-cover" alt="thumbnail">
                         </div>
                         <div class="card-body d-flex flex-column">
                             <div class="text-muted small mb-2">

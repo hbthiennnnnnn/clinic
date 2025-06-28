@@ -58,8 +58,15 @@ class NewsController extends Controller
             ]);
             $news->newsCategories()->sync($request->news_categories);
             if ($request->file('thumbnail')) {
-                $path = $request->file('thumbnail')->store('public/news');
-                $news->thumbnail = str_replace('public/', 'storage/', $path); // để asset() hiển thị đúng đường dẫn
+                $file = $request->file('thumbnail');
+                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $filename = time() . '_' . Str::slug($originalName) . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/news'), $filename);
+
+                if ($news->thumbnail && file_exists(public_path($news->thumbnail))) {
+                    unlink(public_path($news->thumbnail));
+                }
+                $news->thumbnail = '/uploads/news/' . $filename;
                 $news->save();
             }
             DB::commit();
@@ -103,11 +110,15 @@ class NewsController extends Controller
             ]);
             $news->newsCategories()->sync($request->news_categories);
             if ($request->file('thumbnail')) {
+                $file = $request->file('thumbnail');
+                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $filename = time() . '_' . Str::slug($originalName) . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/news'), $filename);
+
                 if ($news->thumbnail && file_exists(public_path($news->thumbnail))) {
                     unlink(public_path($news->thumbnail));
                 }
-                $path = $request->file('thumbnail')->store('public/news');
-                $news->thumbnail = str_replace('public/', 'storage/', $path);
+                $news->thumbnail = '/uploads/news/' . $filename;
                 $news->save();
             }
             DB::commit();
