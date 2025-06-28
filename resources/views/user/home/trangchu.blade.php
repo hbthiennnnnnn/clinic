@@ -34,6 +34,50 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
+    <style>
+        .custom-modal{
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h4 {
+            margin-top: 0;
+        }
+
+        .modal-content button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #000;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #f1f1f1;
+            color: #000;
+        }
+
+        #appointmentSuccessModalLabel {
+            color: #247cff !important;
+        }
+    </style>
 </head>
 
 <body id="top">
@@ -311,23 +355,9 @@
                 <div class="row">
                     <div class="col-lg-8 col-12 mx-auto">
                         <div class="booking-form">
-                            @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                            @endif
+                             <h2 class="text-center mb-lg-3 mb-2">Đặt lịch</h2>
 
-                            @if (session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                                {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                            @endif
-
-                            <h2 class="text-center mb-lg-3 mb-2">Đặt lịch</h2>
-
-                            <form class="form" id="book-appointment-form" action="{{ route('user.book-appointment') }}" method="POST">
+                            <form class="form" id="book-appointment-form">
                                 @csrf
                                 <div class="row g-3">
 
@@ -415,6 +445,7 @@
                                             function closeSameDayWarning() {
                                                 document.getElementById("sameDayWarning").style.display = "none";
                                             }
+
                                             function closeWeekendWarning() {
                                                 document.getElementById("weekendWarning").style.display = "none";
                                             }
@@ -445,7 +476,7 @@
                                 </div>
                             </form>
                             <!-- Modal cảnh báo chọn ngày hôm nay -->
-                            <div id="sameDayWarning" class="modal" style="display: none;">
+                            <div id="sameDayWarning" class="custom-modal" style="display: none;">
                                 <div class="modal-content">
                                     <h4>Thông báo</h4>
                                     <hr>
@@ -460,7 +491,7 @@
                                 </div>
                             </div>
 
-                            <div id="weekendWarning" class="modal" style="display: none;">
+                            <div id="weekendWarning" class="custom-modal" style="display: none;">
                                 <div class="modal-content">
                                     <h4>Thông báo</h4>
                                     <hr>
@@ -472,6 +503,24 @@
                                     </p>
                                     <hr>
                                     <button onclick="closeWeekendWarning()">Đồng ý</button>
+                                </div>
+                            </div>
+
+                            <!-- Modal hiển thị khi đặt lịch thành công -->
+                            <div class="modal fade" id="appointmentSuccessModal" tabindex="-1" aria-labelledby="appointmentSuccessModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content p-4">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="appointmentSuccessModalLabel" style="color:#247cff">Đặt lịch thành công</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Chúng tôi đã nhận được yêu cầu đặt lịch.</p>
+                                            <p>Lịch hẹn của bạn có hiệu lực chỉ khi phòng khám gửi email thông báo lịch khám hoặc liên hệ qua số điện thoại của bạn.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -567,55 +616,42 @@
     <script src="care/js/custom.js"></script>
     <script src="/user/assets/js/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        @if(session('success'))
-        toastr.success("{{ session('success') }}", "Thành công");
-        @elseif(session('error'))
-        toastr.error("{{ session('error') }}", "Lỗi");
-        @endif
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('book-appointment-form');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+
+                fetch("{{ route('user.book-appointment') }}", {
+                        method: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Hiển thị modal thành công
+                            const modal = new bootstrap.Modal(document.getElementById('appointmentSuccessModal'));
+                            modal.show();
+
+                            form.reset(); // Xóa form
+                        } else {
+                            alert(data.message || 'Đã có lỗi xảy ra');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi gửi form:', error);
+                        alert('Có lỗi xảy ra khi đặt lịch.');
+                    });
+            });
+        });
     </script>
-
-    <style>
-        .modal {
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 5px;
-            width: 80%;
-            max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-content h4 {
-            margin-top: 0;
-        }
-
-        .modal-content button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #000;
-            border: none;
-            color: white;
-            cursor: pointer;
-        }
-
-        .modal-content button:hover {
-            background-color: #f1f1f1;
-            color: #000;
-        }
-    </style>
 </body>
-
 </html>
