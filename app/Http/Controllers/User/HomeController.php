@@ -29,7 +29,7 @@ class HomeController extends Controller
     {
         $title = 'Trang chủ';
         $departments = Department::where('status', 1)
-            ->whereNotIn('id', [6,7]) // loại trừ id 2 và 3
+            ->whereNotIn('id', [6, 7]) // loại trừ id 2 và 3
             ->orderByDesc('id')
             ->get();
         $doctors = Admin::role('Bác sĩ')->where('status', 1)->orderByDesc('id')->get();
@@ -212,10 +212,17 @@ class HomeController extends Controller
 
     public function service_price()
     {
-        $medical_services = MedicalService::where('status', 1)->orderByDesc('id')->paginate(6);
+        $medical_services = MedicalService::with(['news' => function ($query) {
+            $query->where('status', 1)->latest()->take(3); // lấy 3 bài viết mới nhất cho mỗi dịch vụ
+        }])
+            ->where('status', 1)
+            ->orderByDesc('id')
+            ->paginate(6);
+
         $news = News::with('newsCategories')->where('status', 1)->orderByDesc('id')->take(5)->get();
         $categories = NewsCategory::where('status', 1)->orderByDesc('id')->get();
         $title = 'Bảng giá dịch vụ';
+
         return view('user.home.service-price', compact('title', 'medical_services', 'news', 'categories'));
     }
 }

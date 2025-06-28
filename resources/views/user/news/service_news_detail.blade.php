@@ -51,7 +51,7 @@
                     @foreach ($relatedNews as $blog)
                     <div class="single-post d-flex mb-3" style="gap: 10px;">
                         <div class="image" style="flex-shrink: 0; width: 80px; height: 60px; overflow: hidden; border-radius: 6px;">
-                        <img src="{{ asset($blog->thumbnail) }}" alt="thumb" style="width: 100%; height: 100%; object-fit: cover;" />
+                           <img src="{{ asset($blog->thumbnail) }}" alt="thumb" style="width: 100%; height: 100%; object-fit: cover;" />
                         </div>
                         <div class="content">
                             <h5 style="font-size: 14px; margin: 0 0 5px;">

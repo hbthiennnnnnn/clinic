@@ -119,29 +119,31 @@
                         <div class="col-md-6 mb-4">
                             <div class="card service-card h-100 shadow-sm">
                                 <div class="card-body d-flex flex-column">
-                                    {{-- Tiêu đề dịch vụ --}}
                                     <h5 class="card-title text-primary fw-bold mb-2 text-start">
                                         {{ $service->name }}
                                     </h5>
 
-                                    {{-- Mô tả --}}
                                     <p class="card-text text-muted flex-grow-1">
-                                        {{ Str::limit($service->description, 100) }}
+                                        {{ Str::limit($service->description ?? 'Không có mô tả', 100) }}
                                     </p>
 
-                                    {{-- Giá và nút --}}
-                                    <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <span class="text-danger fw-bold">
-                                            {{ number_format($service->price, 0, ',', '.') }} đ
-                                        </span>
-                                        <a href="{{ route('home') . '#booking' }}" class="btn btn-sm btn-outline-primary">
-                                            Đặt lịch
+                                    <div class="d-flex justify-content-end mt-3">
+                                        @php
+                                        $article = $service->news()->where('status', 1)->first();
+                                        @endphp
+                                        @if ($article)
+                                        <a href="{{ route('user.service.detail.by_id', ['id' => $service->id]) }}" class="btn btn-sm btn-outline-primary">
+                                            Xem chi tiết
                                         </a>
+                                        @else
+                                        <span class="text-muted small fst-italic">Chưa có bài viết</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
                         @endforeach
+
                     </div>
 
                     {{ $medical_services->links() }}

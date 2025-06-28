@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\NewsRequest;
+use App\Models\MedicalService;
 use App\Models\News;
 use App\Models\NewsCategory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -35,7 +36,8 @@ class NewsController extends Controller
         $this->authorize('them-tin-tuc');
         $title = 'Thêm tin tức';
         $categories = NewsCategory::where('status', 1)->orderByDesc('id')->get();
-        return view('admin.news.create', compact('title', 'categories'));
+        $services = MedicalService::orderBy('name')->get();
+        return view('admin.news.create', compact('title', 'categories', 'services'));
     }
 
     /**
@@ -51,19 +53,13 @@ class NewsController extends Controller
                 'content' => $request->content,
                 'status' => $request->status,
                 'poster_id' => auth()->guard('admin')->id(),
-                'thumbnail' => '/uploads/news/default.jpg'
+                'thumbnail' => '/uploads/news/default.jpg',
+                'medical_service_id' => $request->medical_service_id,
             ]);
             $news->newsCategories()->sync($request->news_categories);
             if ($request->file('thumbnail')) {
-                $file = $request->file('thumbnail');
-                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $filename = time() . '_' . Str::slug($originalName) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('uploads/news'), $filename);
-
-                if ($news->thumbnail && file_exists(public_path($news->thumbnail))) {
-                    unlink(public_path($news->thumbnail));
-                }
-                $news->thumbnail = '/uploads/news/' . $filename;
+                $path = $request->file('thumbnail')->store('public/news');
+                $news->thumbnail = str_replace('public/', 'storage/', $path); // để asset() hiển thị đúng đường dẫn
                 $news->save();
             }
             DB::commit();
@@ -85,7 +81,8 @@ class NewsController extends Controller
         $title = 'Chỉnh sửa tin tức';
         $news = News::findOrFail($id);
         $categories = NewsCategory::where('status', 1)->orderByDesc('id')->get();
-        return view('admin.news.edit', compact('title', 'news', 'categories'));
+        $services = MedicalService::orderBy('name')->get();
+        return view('admin.news.edit', compact('title', 'news', 'categories', 'services'));
     }
 
     /**
@@ -102,18 +99,15 @@ class NewsController extends Controller
                 'slug' => Helper::createSlug($request->title),
                 'content' => $request->content,
                 'status' => $request->status,
+                'medical_service_id' => $request->medical_service_id,
             ]);
             $news->newsCategories()->sync($request->news_categories);
             if ($request->file('thumbnail')) {
-                $file = $request->file('thumbnail');
-                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $filename = time() . '_' . Str::slug($originalName) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('uploads/news'), $filename);
-
                 if ($news->thumbnail && file_exists(public_path($news->thumbnail))) {
                     unlink(public_path($news->thumbnail));
                 }
-                $news->thumbnail = '/uploads/news/' . $filename;
+                $path = $request->file('thumbnail')->store('public/news');
+                $news->thumbnail = str_replace('public/', 'storage/', $path);
                 $news->save();
             }
             DB::commit();

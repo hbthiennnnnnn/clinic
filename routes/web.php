@@ -202,4 +202,5 @@ Route::post('/faq', [FaqController::class, 'ask_question'])->name('user.ask-ques
 Route::get('/faq/{slug}', [FaqController::class, 'faq_department'])->name('user.faq-department');
 Route::get('/{slugCategory}/{slug}', [UserNewsController::class, 'news_detail'])->name('user.news-detail');
 Route::get('/{slugCategory}', [UserNewsController::class, 'news'])->name('user.news');
-
+Route::get('/dich-vu/xem-bai-viet/{id}', [\App\Http\Controllers\User\NewsController::class, 'serviceDetailById'])
+    ->name('user.service.detail.by_id');

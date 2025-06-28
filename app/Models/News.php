@@ -14,7 +14,8 @@ class News extends Model
         'status',
         'thumbnail',
         'slug',
-        'poster_id'
+        'poster_id',
+        'medical_service_id',
     ];
 
     public function newsCategories()
@@ -25,5 +26,10 @@ class News extends Model
     public function poster()
     {
         return $this->belongsTo(Admin::class, 'poster_id');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(MedicalService::class, 'medical_service_id');
     }
 }
