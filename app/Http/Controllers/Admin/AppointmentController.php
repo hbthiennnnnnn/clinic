@@ -144,21 +144,24 @@ class AppointmentController extends Controller
 
     public function page_reply($id)
     {
-        $this->authorize('tra-loi-lich-hen-kham');
-        $title = 'Phản hồi lịch hẹn khám';
         $appointment = Appointment::findOrFail($id);
         $admin = auth()->guard('admin')->user();
+        $title = 'Phản hồi lịch hẹn khám';
+
+        // Nếu là bác sĩ → kiểm tra điều kiện
         if ($admin->hasRole('Bác sĩ')) {
-            if ($admin->id == $appointment->doctor_id) {
-                return view('admin.appointment.appointment-reply', compact('title', 'appointment'));
-            } else abort(403);
+            if ($admin->id != $appointment->doctor_id) {
+                abort(403, 'Bạn không có quyền phản hồi lịch hẹn này');
+            }
         }
+
+        // Nếu không phải bác sĩ (ví dụ y tá) thì được phép phản hồi
         return view('admin.appointment.appointment-reply', compact('title', 'appointment'));
     }
 
     public function reply(Request $request)
     {
-        $this->authorize('tra-loi-lich-hen-kham');
+        
         try {
             $appointment = Appointment::findOrFail($request->id);
             $title = $request->title;
