@@ -149,4 +149,97 @@ class StripePaymentController extends Controller
 
         return view('user.stripe.service_success', compact('medical'));
     }
+
+    public function createCombinedCheckout($id)
+    {
+        $userId = auth()->id();
+
+        $medical = MedicalCertificate::whereHas('patient.user', function ($query) use ($userId) {
+            $query->where('id', $userId);
+        })->with('services', 'prescription')->findOrFail($id);
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $lineItems = [];
+
+        $total = 0;
+
+        // Đơn thuốc (nếu chưa thanh toán)
+        if ($medical->prescription && $medical->prescription->status != 1) {
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'vnd',
+                    'product_data' => [
+                        'name' => 'Đơn thuốc #' . $medical->prescription->prescription_code,
+                    ],
+                    'unit_amount' => $medical->prescription->total_payment,
+                ],
+                'quantity' => 1,
+            ];
+            $total += $medical->prescription->total_payment;
+        }
+
+        // Dịch vụ khám (nếu chưa thanh toán)
+        if ($medical->payment_status != 1 && $medical->services->isNotEmpty()) {
+            $serviceTotal = 0;
+            foreach ($medical->services as $service) {
+                $price = $service->price;
+                if ($medical->insurance) {
+                    $price *= 0.8;
+                }
+                $serviceTotal += $price;
+            }
+
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'vnd',
+                    'product_data' => [
+                        'name' => 'Dịch vụ khám #' . $medical->medical_certificate_code,
+                    ],
+                    'unit_amount' => $serviceTotal,
+                ],
+                'quantity' => 1,
+            ];
+            $total += $serviceTotal;
+        }
+
+        // Nếu không có gì cần thanh toán
+        if ($total == 0) {
+            return redirect()->back()->with('warning', 'Không có khoản nào cần thanh toán.');
+        }
+
+        $session = Session::create([
+            'line_items' => $lineItems,
+            'mode' => 'payment',
+            'success_url' => route('user.stripe.combined.success', ['id' => $medical->id]),
+            'cancel_url' => route('user.stripe.cancel'),
+        ]);
+
+        return redirect($session->url);
+    }
+
+    public function combinedSuccess($id)
+    {
+        $userId = auth()->id();
+
+        $medical = MedicalCertificate::whereHas('patient.user', function ($query) use ($userId) {
+            $query->where('id', $userId);
+        })->with('prescription')->findOrFail($id);
+
+        DB::transaction(function () use ($medical) {
+            // Cập nhật trạng thái dịch vụ
+            if ($medical->payment_status != 1) {
+                $medical->payment_status = 1;
+                $medical->save();
+            }
+
+            // Cập nhật trạng thái đơn thuốc
+            if ($medical->prescription && $medical->prescription->status != 1) {
+                $medical->prescription->status = 1;
+                $medical->prescription->save();
+            }
+        });
+
+        return view('user.stripe.combined_success', compact('medical'));
+    }
 }

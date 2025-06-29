@@ -30,6 +30,7 @@ use App\Http\Controllers\User\FaqController;
 use App\Http\Controllers\User\NewsController as UserNewsController;
 use App\Http\Controllers\User\PrescriptionController as UserPrescriptionController;
 use App\Http\Controllers\User\ServiceController;
+use App\Http\Controllers\User\StripePaymentController;
 use App\Models\MedicineBatch;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
@@ -185,6 +186,10 @@ Route::prefix('/profile')->middleware('auth.user')->group(function () {
     Route::get('/payment/service-checkout/{id}', [\App\Http\Controllers\User\StripePaymentController::class, 'createServiceCheckout'])->name('user.service.checkout');
     Route::get('/payment/service-success/{id}', [\App\Http\Controllers\User\StripePaymentController::class, 'serviceSuccess'])->name('user.service.success');
     Route::get('/prescription/{id}', [UserPrescriptionController::class, 'show'])->name('user.prescription.show');
+    Route::get('checkout/combined/{id}', [\App\Http\Controllers\User\StripePaymentController::class, 'createCombinedCheckout'])->name('user.prescription_and_service.checkout');
+    Route::get('checkout/combined/success/{id}', [\App\Http\Controllers\User\StripePaymentController::class, 'combinedSuccess'])->name('user.stripe.combined.success');
+
+
 });
 Route::get('/search', [HomeController::class, 'search'])->name('user.search');
 Route::get('/doi-ngu-chuyen-gia', [DoctorController::class, 'doctors'])->name('user.doctors');
@@ -204,3 +209,4 @@ Route::get('/{slugCategory}/{slug}', [UserNewsController::class, 'news_detail'])
 Route::get('/{slugCategory}', [UserNewsController::class, 'news'])->name('user.news');
 Route::get('/dich-vu/xem-bai-viet/{id}', [\App\Http\Controllers\User\NewsController::class, 'serviceDetailById'])
     ->name('user.service.detail.by_id');
+
