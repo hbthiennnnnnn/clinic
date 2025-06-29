@@ -71,7 +71,7 @@
                             <a href="{{ route('appointment.index') }}" class="btn btn-info" title="Quay lại"><i
                                     class="fas fa-arrow-left me-2" data-bs-toggle="tooltip"></i>Quay
                                 lại</a>&nbsp;
-                           @can('kham-benh')
+                           
                                 @if ($admin->hasRole('Bác sĩ') && $appointment->doctor_id == $admin->id)
                                     <a href="{{ route('admin.reply-appointment', $appointment->id) }}" title="Gửi phản hồi"
                                         class="btn btn-success"><i class="fas fa-reply me-2"></i>Phản hồi</a>
@@ -81,8 +81,7 @@
                                         class="btn btn-success"><i class="fas fa-reply me-2"></i>Phản hồi</a>
                                     &nbsp;
                                 @endif
-                           @endcan
-                          @can('kham-benh')
+                         
                                 @if ($admin->hasRole('Bác sĩ') && $appointment->doctor_id == $admin->id)
                                     <form action="{{ route('admin.appointment-delete', $appointment->id) }}" method="POST"
                                         class="delete-form" style="display: inline-block">
@@ -104,7 +103,7 @@
                                         </button>
                                     </form>
                                 @endif
-                            @endcan
+                        
                         </td>
                     </tr>
                 </table>
