@@ -637,11 +637,10 @@
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
-                            // Hiển thị modal thành công
                             const modal = new bootstrap.Modal(document.getElementById('appointmentSuccessModal'));
                             modal.show();
 
-                            form.reset(); // Xóa form
+                            form.reset(); 
                         } else {
                             alert(data.message || 'Đã có lỗi xảy ra');
                         }
