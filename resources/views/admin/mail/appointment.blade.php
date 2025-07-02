@@ -91,7 +91,7 @@
                 <div class="header-right">
                     <div class="contact-info">
                         <p>📞 <strong>0123.456.789</strong> (Free Hotline)</p>
-                        <p>🌐 <a style="color:white" href="http://127.0.0.1:8000/">Healing Care Website</a></p>
+                        <p>🌐 <a style="color:white" href="https://healingcare.healingdc.id.vn/">Healing Care Website</a></p>
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
             <p>Bạn đã đăng ký thành công lịch hẹn khám tại Healing Care.</p>
             <p>Chúng tôi sẽ liên hệ sớm nhất với bạn để hoàn thành lịch hẹn khám.</p>
             <p>Nếu có vấn đề gì muốn hủy lịch hẹn. Vui lòng nhấn vào link này:
-                <a href="http://127.0.0.1:8000/cancel-appointment/{{ $token }}"
+                <a href="https://healingcare.healingdc.id.vn/cancel-appointment/{{ $token }}"
                     onclick="return confirm('Bạn có chắc chắn muốn hủy lịch hẹn này không?')">
                     Hủy lịch hẹn
                 </a>
