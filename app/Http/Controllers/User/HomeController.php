@@ -165,7 +165,7 @@ class HomeController extends Controller
                 'cancel_token' => Str::uuid(),
             ]);
 
-            AppointmentJob::dispatch($data->email, $data->cancel_token)->delay(now()->addSecond(10));
+            AppointmentJob::dispatch($data->email, $data->cancel_token);
             $count = Appointment::where('is_viewed', false)->count();
             $doctor = Admin::find($data['doctor_id']);
             event(new AppointmentEvent($data['name'], $data['id'], $count, $doctor->name));
