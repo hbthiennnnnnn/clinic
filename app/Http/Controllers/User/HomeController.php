@@ -140,7 +140,6 @@ class HomeController extends Controller
                 return response()->json(['success' => false, 'message' => 'Bác sĩ không có lịch làm việc.']);
             }
 
-            // Lấy khung giờ tương ứng theo session
             if ($request->session === 'morning') {
                 $start_time = $schedule->morning_start;
             } elseif ($request->session === 'afternoon') {
@@ -158,8 +157,8 @@ class HomeController extends Controller
                 'department_id' => $request->department_id,
                 'doctor_id' => $request->doctor_id,
                 'appointment_date' => $request->appointment_date,
-                'session' => $request->session, // NEW FIELD: buổi sáng hoặc chiều
-                'start_time' => $start_time,    // Vẫn lưu nếu muốn
+                'session' => $request->session, 
+                'start_time' => $start_time,   
                 'note' => $request->note,
                 'is_viewed' => false,
                 'status' => 0,
@@ -213,7 +212,7 @@ class HomeController extends Controller
     public function service_price()
     {
         $medical_services = MedicalService::with(['news' => function ($query) {
-            $query->where('status', 1)->latest()->take(3); // lấy 3 bài viết mới nhất cho mỗi dịch vụ
+            $query->where('status', 1)->latest()->take(3); 
         }])
             ->where('status', 1)
             ->orderByDesc('id')
