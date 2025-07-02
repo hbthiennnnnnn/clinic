@@ -3,7 +3,7 @@
 <div class="container" style="color: white">
     <div class="card shadow-sm m-4">
         <div class="card-header bg-primary text-white">
-            <h4>📄 Chi tiết Giấy khám bệnh #{{ $medical_certificate->medical_certificate_code }}</h4>
+            <h4>Chi tiết Giấy khám bệnh #{{ $medical_certificate->medical_certificate_code }}</h4>
         </div>
         <div class="card-body">
             <div class="row">
