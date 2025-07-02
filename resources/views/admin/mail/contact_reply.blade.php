@@ -91,7 +91,7 @@
                 <div class="header-right">
                     <div class="contact-info">
                         <p>📞 <strong>0123.456.789</strong></p>
-                        <p>🌐 <a style="color:white" href="http://127.0.0.1:8000/">Healing Care Website</a></p>
+                        <p>🌐 <a style="color:white" href="https://healingcare.healingdc.id.vn/">Healing Care Website</a></p>
                     </div>
                 </div>
             </div>
